@@ -1,6 +1,6 @@
 import express, { type Request, type Response } from "express";
 import cors from "cors";
-// import { pool } from "./db";
+
 
 import authRouter from "./api/auth";
 

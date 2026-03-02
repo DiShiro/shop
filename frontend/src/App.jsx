@@ -16,7 +16,7 @@ function App() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Отправляем данные на твой бэкенд
+      // Отправляем данные на бэкенд
       const response = await axios.post('http://localhost:3000/api/auth/register', formData);
       setMessage('Успех! Пользователь зарегистрирован.');
       console.log(response.data);

@@ -10,27 +10,52 @@ interface RegisterBody {
 
 const router = express.Router();
 
-router.post("/login", async function (params) {});
-router.post("/logout", async function (params) {});
+router.post("/login", async (req: Request, res: Response) => {
+  res.status(501).json({ error: "Not implemented" });
+});
 
-router.post(
-  "/register",
-  async function (req: Request<{}, {}, RegisterBody>, res: Response) {
-    try {
-      const { username, email, password } = req.body;
-      if (!email || !password || !username)
-        throw new Error("Email or password error1");
-      if (email) {
-      } // есть ли такой пользователь в бд
-      const hashedPass = await hashPass(password);
-      const newUser = prisma.user.create({
-        data: { username, email, password: hashedPass },
-      });
-      return res.status(200).json({ text: newUser });
-    } catch (e) {
-      return res.status(400).json({ error: e });
+router.post("/logout", async (req: Request, res: Response) => {
+  res.status(501).json({ error: "Not implemented" });
+});
+
+router.post("/register", async (req: Request<{}, {}, RegisterBody>, res: Response) => {
+  try {
+    const { username, email, password } = req.body;
+
+    if (!username || !email || !password) {
+      return res.status(400).json({ error: "Missing required fields: username, email, password" });
     }
-  },
-);
+
+    const hashedPass = await hashPass(password);
+
+    const newUser = await prisma.user.create({
+      data: {
+        username,
+        email,
+        password: hashedPass,
+      },
+      select: {
+        id: true,
+        username: true,
+        email: true,
+      },
+    });
+
+    return res.status(201).json({ user: newUser });
+  } catch (error: any) {
+    if (error.code === 'P2002') {
+      const target = error.meta?.target;
+      if (target?.includes('email')) {
+        return res.status(409).json({ error: "User with this email already exists" });
+      }
+      if (target?.includes('username')) {
+        return res.status(409).json({ error: "User with this username already exists" });
+      }
+    }
+
+    console.error("Registration error:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 export default router;
