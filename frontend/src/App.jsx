@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import './App.css';
 
 function App() {
   const [formData, setFormData] = useState({
@@ -16,25 +17,48 @@ function App() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Отправляем данные на бэкенд
       const response = await axios.post('http://localhost:3000/api/auth/register', formData);
-      setMessage('Успех! Пользователь зарегистрирован.');
+      setMessage('✅ Регистрация успешна!');
       console.log(response.data);
+      setFormData({ username: '', email: '', password: '' });
     } catch (error) {
-      setMessage('Ошибка: ' + (error.response?.data?.error || 'Сервер не отвечает'));
+      setMessage('❌ Ошибка: ' + (error.response?.data?.error || 'Сервер не отвечает'));
     }
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '50px' }}>
-      <h1>Регистрация</h1>
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', width: '300px', gap: '10px' }}>
-        <input name="username" placeholder="Имя пользователя" onChange={handleChange} required />
-        <input name="email" type="email" placeholder="Email" onChange={handleChange} required />
-        <input name="password" type="password" placeholder="Пароль" onChange={handleChange} required />
-        <button type="submit" style={{ padding: '10px', cursor: 'pointer' }}>Создать аккаунт</button>
-      </form>
-      {message && <p>{message}</p>}
+    <div className="container">
+      <div className="form-card">
+        <h1>Регистрация</h1>
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            name="username"
+            placeholder="Имя пользователя"
+            value={formData.username}
+            onChange={handleChange}
+            required
+          />
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Пароль"
+            value={formData.password}
+            onChange={handleChange}
+            required
+          />
+          <button type="submit">Зарегистрироваться</button>
+        </form>
+        {message && <p className="message">{message}</p>}
+      </div>
     </div>
   );
 }
