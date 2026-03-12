@@ -18,11 +18,11 @@ function App() {
     e.preventDefault();
     try {
       const response = await axios.post('http://localhost:3000/api/auth/register', formData);
-      setMessage('✅ Регистрация успешна!');
+      setMessage('Регистрация успешна!');
       console.log(response.data);
       setFormData({ username: '', email: '', password: '' });
     } catch (error) {
-      setMessage('❌ Ошибка: ' + (error.response?.data?.error || 'Сервер не отвечает'));
+      setMessage('Ошибка: ' + (error.response?.data?.error || 'Сервер не отвечает'));
     }
   };
 

@@ -1,6 +1,5 @@
 import express, { Request, Response } from "express";
-import { hashPass } from "../utils/hashPass";
-import prisma from "../db";
+import { createUser } from "../serviсes/users";
 
 interface RegisterBody {
   username?: string;
@@ -26,23 +25,11 @@ router.post("/register", async (req: Request<{}, {}, RegisterBody>, res: Respons
       return res.status(400).json({ error: "Missing required fields: username, email, password" });
     }
 
-    const hashedPass = await hashPass(password);
-
-    const newUser = await prisma.user.create({
-      data: {
-        username,
-        email,
-        password: hashedPass,
-      },
-      select: {
-        id: true,
-        username: true,
-        email: true,
-      },
-    });
+    const newUser = await createUser(username, email, password);
 
     return res.status(201).json({ user: newUser });
   } catch (error: any) {
+
     if (error.code === 'P2002') {
       const target = error.meta?.target;
       if (target?.includes('email')) {
