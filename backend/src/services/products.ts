@@ -6,7 +6,9 @@ export async function getAllProducts() {
 }
 
 export async function getProductById(id: number) {
-    return prisma.product.findMany();
+  return prisma.product.findUnique({
+    where: { id },
+  });
 }
 
 export async function createProduct(data: Prisma.ProductCreateInput){
