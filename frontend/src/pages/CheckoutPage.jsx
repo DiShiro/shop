@@ -3,7 +3,6 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
-import './CheckoutPage.css';
 
 const CheckoutPage = () => {
   const { cartItems, totalPrice, clearCart } = useCart();
@@ -36,28 +35,51 @@ const CheckoutPage = () => {
   };
 
   if (cartItems.length === 0) {
-    return <div>Корзина пуста</div>;
+    return (
+      <div className="container mx-auto px-4 py-16 text-center">
+        <div className="bg-white rounded-lg shadow-md p-8 max-w-md mx-auto">
+          <h2 className="text-2xl font-semibold text-gray-700 mb-4">Корзина пуста</h2>
+          <Link to="/" className="inline-block bg-gray-800 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition">
+            Вернуться к покупкам
+          </Link>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="checkout">
-      <h1>Оформление заказа</h1>
-      <div className="order-summary">
-        <h3>Ваш заказ</h3>
-        {cartItems.map(item => (
-          <div key={item.id} className="order-item">
-            <span>{item.name} x {item.quantity}</span>
-            <span>{item.price * item.quantity} ₽</span>
-          </div>
-        ))}
-        <div className="total">Итого: {totalPrice} ₽</div>
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center relative after:content-[''] after:block after:w-24 after:h-1 after:bg-blue-500 after:mx-auto after:mt-2">
+        Оформление заказа
+      </h1>
+      <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+        <h3 className="text-xl font-semibold text-gray-800 mb-4 border-b-2 border-blue-500 inline-block pb-1">Ваш заказ</h3>
+        <div className="space-y-2 mt-4">
+          {cartItems.map(item => (
+            <div key={item.id} className="flex justify-between py-2 border-b border-dashed last:border-none">
+              <span>{item.name} x {item.quantity}</span>
+              <span className="font-medium">{item.price * item.quantity} ₽</span>
+            </div>
+          ))}
+        </div>
+        <div className="mt-4 pt-2 text-right text-xl font-bold text-gray-800 border-t-2 border-gray-300">
+          Итого: {totalPrice} ₽
+        </div>
       </div>
-      <form onSubmit={handleSubmit}>
-        {!user && <p>Необходимо <Link to="/login?redirect=checkout">войти</Link></p>}
-        <button type="submit" disabled={loading || !user}>
+      <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md p-6">
+        {!user && (
+          <p className="text-center text-gray-600 mb-4">
+            Необходимо <Link to="/login?redirect=checkout" className="text-blue-600 hover:underline">войти</Link>
+          </p>
+        )}
+        <button
+          type="submit"
+          disabled={loading || !user}
+          className="w-full bg-gray-800 hover:bg-blue-600 text-white font-semibold py-3 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+        >
           {loading ? 'Оформление...' : 'Подтвердить заказ'}
         </button>
-        {error && <p className="error">{error}</p>}
+        {error && <p className="text-red-600 text-center mt-4">{error}</p>}
       </form>
     </div>
   );

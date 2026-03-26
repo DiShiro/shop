@@ -9,7 +9,7 @@ import CheckoutPage from './pages/CheckoutPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import OrderSuccessPage from './pages/OrderSuccessPage';
-import './App.css';
+
 
 function App() {
   return (
@@ -17,7 +17,7 @@ function App() {
       <AuthProvider>
         <CartProvider>
           <Header />
-          <div className="main-container">
+          <div className="bg-gray-50 min-h-screen">
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/cart" element={<CartPage />} />
