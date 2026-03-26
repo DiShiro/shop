@@ -1,7 +1,49 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useCart } from '../context/CartContext';
-
+const defaultProductsList = [  {
+    id: 1,
+    name: 'Смартфон X200',
+    description: '6.7" OLED, 128 ГБ, тройная камера, быстрая зарядка',
+    price: 49990,
+    image: 'https://via.placeholder.com/300x200?text=Smartphone',
+  },
+  {
+    id: 2,
+    name: 'Ноутбук Pro 15',
+    description: 'Intel Core i7, 16 ГБ RAM, SSD 512 ГБ, RTX 3060',
+    price: 89990,
+    image: 'https://via.placeholder.com/300x200?text=Laptop',
+  },
+  {
+    id: 3,
+    name: 'Беспроводные наушники',
+    description: 'Active Noise Cancelling, 30 ч работы, Bluetooth 5.2',
+    price: 12990,
+    image: 'https://via.placeholder.com/300x200?text=Headphones',
+  },
+  {
+    id: 4,
+    name: 'Умные часы',
+    description: 'GPS, мониторинг здоровья, AMOLED-дисплей',
+    price: 19990,
+    image: 'https://via.placeholder.com/300x200?text=Smartwatch',
+  },
+  {
+    id: 5,
+    name: 'Планшет Tab S',
+    description: '10.5" 120 Гц, стилус в комплекте, 128 ГБ',
+    price: 35990,
+    image: 'https://via.placeholder.com/300x200?text=Tablet',
+  },
+  {
+    id: 6,
+    name: 'Игровая консоль',
+    description: '4K, 1 ТБ, беспроводной контроллер',
+    price: 44990,
+    image: 'https://via.placeholder.com/300x200?text=Console',
+  },
+]
 const HomePage = () => {
   const [products, setProducts] = useState([]);
   const { addToCart } = useCart();
@@ -10,7 +52,14 @@ const HomePage = () => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get('http://localhost:3000/api/products');
+        console.log(response.data);
+        
+        if (Array.isArray(response.data) && response.data.length == 0) {
+          setProducts(defaultProductsList)
+          return 
+        }
         setProducts(response.data);
+        
       } catch (error) {
         console.error('Ошибка загрузки товаров', error);
       }
@@ -24,7 +73,7 @@ const HomePage = () => {
         Товары
       </h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {products.map(product => (
+        {Array.isArray(products) && products.map(product => (
           <div key={product.id} className="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden flex flex-col">
             <img
               src={product.image || 'https://via.placeholder.com/300x200?text=Нет+фото'}
