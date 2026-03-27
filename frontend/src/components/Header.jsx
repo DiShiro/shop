@@ -33,7 +33,7 @@ const Header = () => {
           </Link>
           {user ? (
             <div className="flex items-center gap-3">
-              <span className="text-blue-400">👤 {user.username}</span>
+              <span className="text-blue-400">{user.username}</span>
               <button
                 onClick={handleLogout}
                 className="border border-blue-400 text-blue-400 px-3 py-1 rounded-full hover:bg-blue-400 hover:text-white transition"
