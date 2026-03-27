@@ -1,6 +1,32 @@
 import React from 'react';
 import { useCart } from '../context/CartContext';
 import { Link } from 'react-router-dom';
+import phoneImg from '../image/smartphone.jpg';
+import laptopImg from '../image/laptop.jpg';
+import headphonesImg from '../image/headphones.jpg';
+import smartwatchImg from '../image/smartwatch.jpg';
+import tabletImg from '../image/tablet.jpg';
+import consoleImg from '../image/console.jpg';
+
+const productImages = {
+  1: phoneImg,
+  2: laptopImg,
+  3: headphonesImg,
+  4: smartwatchImg,
+  5: tabletImg,
+  6: consoleImg,
+};
+
+const getImageSrc = (item) => {
+  const id = Number(item.id);
+  if (productImages[id]) {
+    return productImages[id];
+  }
+  if (item.image && typeof item.image === 'string') {
+    return item.image;
+  }
+  return 'https://via.placeholder.com/80?text=Нет+фото';
+};
 
 const CartPage = () => {
   const { cartItems, removeFromCart, updateQuantity, totalPrice } = useCart();
@@ -27,7 +53,7 @@ const CartPage = () => {
         {cartItems.map(item => (
           <div key={item.id} className="flex flex-col sm:flex-row items-center justify-between p-4 border-b last:border-b-0 gap-4">
             <img
-              src={item.image || 'https://via.placeholder.com/80'}
+              src={getImageSrc(item)}
               alt={item.name}
               className="w-20 h-20 object-cover rounded"
             />
