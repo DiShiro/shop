@@ -27,7 +27,7 @@ function App() {
               <Route path="/orders/success" element={<OrderSuccessPage />} />
             </Routes>
           </div>
-          {/* Чат будет отображаться на всех страницах */}
+          
           <Chat />
         </CartProvider>
       </AuthProvider>

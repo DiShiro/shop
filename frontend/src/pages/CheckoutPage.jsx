@@ -47,7 +47,6 @@ const CheckoutPage = () => {
     );
   }
 
-  // Если пользователь не авторизован, показываем сообщение
   if (!user) {
     return (
       <div className="container mx-auto px-4 py-16 text-center">

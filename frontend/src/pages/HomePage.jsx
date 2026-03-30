@@ -104,7 +104,6 @@ const HomePage = () => {
 
   const handleAddToCart = (product) => {
     if (!user) {
-      // Если не авторизован, перенаправляем на страницу входа с параметром redirect
       navigate(`/login?redirect=${encodeURIComponent(window.location.pathname)}`);
       return;
     }
