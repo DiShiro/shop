@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 import phoneImg from '../image/smartphone.jpg';
 import laptopImg from '../image/laptop.jpg';
 import headphonesImg from '../image/headphones.jpg';
@@ -65,6 +67,8 @@ const defaultProductsList = [
 const HomePage = () => {
   const [products, setProducts] = useState([]);
   const { addToCart } = useCart();
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -84,12 +88,10 @@ const HomePage = () => {
     fetchProducts();
   }, []);
 
-
   const getImageSrc = (product) => {
     if (productImages[product.id]) {
       return productImages[product.id];
     }
-
     if (product.image && typeof product.image === 'string') {
       return product.image;
     }
@@ -97,7 +99,16 @@ const HomePage = () => {
   };
 
   const shouldUseContain = (productId) => {
-    return productId === 1 || productId === 5; 
+    return productId === 1 || productId === 5;
+  };
+
+  const handleAddToCart = (product) => {
+    if (!user) {
+      // Если не авторизован, перенаправляем на страницу входа с параметром redirect
+      navigate(`/login?redirect=${encodeURIComponent(window.location.pathname)}`);
+      return;
+    }
+    addToCart(product);
   };
 
   return (
@@ -129,7 +140,7 @@ const HomePage = () => {
                 <div className="mt-auto flex items-center justify-between">
                   <span className="text-2xl font-bold text-blue-600">{product.price.toLocaleString()} ₽</span>
                   <button
-                    onClick={() => addToCart(product)}
+                    onClick={() => handleAddToCart(product)}
                     className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                   >
                     В корзину

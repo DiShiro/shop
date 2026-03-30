@@ -9,7 +9,7 @@ import CheckoutPage from './pages/CheckoutPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import OrderSuccessPage from './pages/OrderSuccessPage';
-
+import Chat from './Chat/Chat'; 
 
 function App() {
   return (
@@ -27,6 +27,8 @@ function App() {
               <Route path="/orders/success" element={<OrderSuccessPage />} />
             </Routes>
           </div>
+          {/* Чат будет отображаться на всех страницах */}
+          <Chat />
         </CartProvider>
       </AuthProvider>
     </BrowserRouter>

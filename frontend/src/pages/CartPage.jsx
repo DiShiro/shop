@@ -1,5 +1,6 @@
 import React from 'react';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
 import phoneImg from '../image/smartphone.jpg';
 import laptopImg from '../image/laptop.jpg';
@@ -30,6 +31,29 @@ const getImageSrc = (item) => {
 
 const CartPage = () => {
   const { cartItems, removeFromCart, updateQuantity, totalPrice } = useCart();
+  const { user } = useAuth();
+
+  // Если пользователь не авторизован, показываем сообщение
+  if (!user) {
+    return (
+      <div className="container mx-auto px-4 py-16 text-center">
+        <div className="bg-white rounded-lg shadow-md p-8 max-w-md mx-auto">
+          <h2 className="text-2xl font-semibold text-gray-700 mb-4">Войдите в аккаунт</h2>
+          <p className="text-gray-600 mb-6">
+            Чтобы просмотреть корзину и добавлять товары, пожалуйста, войдите или зарегистрируйтесь.
+          </p>
+          <div className="flex gap-4 justify-center">
+            <Link to="/login" className="bg-gray-800 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition">
+              Войти
+            </Link>
+            <Link to="/register" className="border border-gray-800 hover:bg-gray-800 hover:text-white text-gray-800 px-6 py-2 rounded-lg transition">
+              Зарегистрироваться
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (cartItems.length === 0) {
     return (
