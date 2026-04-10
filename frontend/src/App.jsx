@@ -9,7 +9,9 @@ import CheckoutPage from './pages/CheckoutPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import OrderSuccessPage from './pages/OrderSuccessPage';
-import Chat from './Chat/Chat'; 
+import SupportPage from './pages/SupportPage';
+import AdminSupportPage from './pages/AdminSupportPage';
+
 
 function App() {
   return (
@@ -25,10 +27,10 @@ function App() {
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/orders/success" element={<OrderSuccessPage />} />
+              <Route path="/support" element={<SupportPage />} />
+              <Route path="/admin/support" element={<AdminSupportPage />} />
             </Routes>
           </div>
-          
-          <Chat />
         </CartProvider>
       </AuthProvider>
     </BrowserRouter>

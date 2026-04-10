@@ -18,7 +18,6 @@ interface LoginBody {
 
 const router = express.Router();
 
-
 router.post("/register", async (req: Request<{}, {}, RegisterBody>, res: Response) => {
   try {
     const { username, email, password } = req.body;
@@ -38,7 +37,6 @@ router.post("/register", async (req: Request<{}, {}, RegisterBody>, res: Respons
   }
 });
 
-
 router.post("/login", async (req: Request<{}, {}, LoginBody>, res: Response) => {
   try {
     const { email, password } = req.body;
@@ -55,7 +53,12 @@ router.post("/login", async (req: Request<{}, {}, LoginBody>, res: Response) => 
     }
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET!, { expiresIn: '7d' });
     res.json({
-      user: { id: user.id, username: user.username, email: user.email },
+      user: { 
+        id: user.id, 
+        username: user.username, 
+        email: user.email, 
+        role: user.role   
+      },
       token
     });
   } catch (error) {
@@ -64,17 +67,15 @@ router.post("/login", async (req: Request<{}, {}, LoginBody>, res: Response) => 
   }
 });
 
-
 router.post("/logout", (req: Request, res: Response) => {
   res.json({ message: "Выход выполнен" });
 });
-
 
 router.get("/me", authenticate, async (req: AuthRequest, res: Response) => {
   try {
     const user = await prisma.user.findUnique({
       where: { id: req.user!.id },
-      select: { id: true, username: true, email: true }
+      select: { id: true, username: true, email: true, role: true } 
     });
     res.json(user);
   } catch (error) {

@@ -13,25 +13,21 @@ const Chat = () => {
 
   const { status, error, messages, connect, disconnect, sendMessage } = useChatSocket(backendUrl);
 
-  // Прокрутка вниз при новых сообщениях
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // При закрытии окна отключаемся, если были подключены
   useEffect(() => {
     if (!isOpen && status === 'connected') {
       disconnect();
     }
   }, [isOpen, status, disconnect]);
 
-  // Показываем форму ввода имени, если окно открыто и имя не задано
   useEffect(() => {
     if (isOpen && !userNickname) {
       setShowNamePrompt(true);
     } else if (isOpen && userNickname && !showNamePrompt && status === 'disconnected') {
-      // Если имя есть, но почему-то не подключены (например, после ошибки) – можно авто-подключить
-      // Но для простоты не будем, пусть пользователь нажмёт "Начать чат" заново
+      
     }
   }, [isOpen, userNickname, status, showNamePrompt]);
 
@@ -39,7 +35,6 @@ const Chat = () => {
     e.preventDefault();
     const trimmed = userNickname.trim();
     if (!trimmed) return;
-    // Важно: используем trimmed напрямую, никакого обрезания
     console.log('Подключаемся с ником:', trimmed);
     connect({ room, nickname: trimmed });
     setShowNamePrompt(false);

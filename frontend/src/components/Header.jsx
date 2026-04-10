@@ -5,11 +5,12 @@ import { useCart } from '../context/CartContext';
 
 const Header = () => {
   const { user, logout } = useAuth();
-  const { cartItems } = useCart();
+  const { cartItems, clearCart } = useCart();
   const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
+    clearCart();
     navigate('/');
   };
 
@@ -24,13 +25,18 @@ const Header = () => {
         <nav className="flex items-center space-x-6">
           <Link to="/" className="hover:text-blue-400 transition">Каталог</Link>
           <Link to="/cart" className="flex items-center gap-1 hover:text-blue-400 transition">
-             Корзина
+            Корзина
             {cartItems.length > 0 && (
               <span className="bg-blue-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                 {cartItems.length}
               </span>
             )}
           </Link>
+          {user && (
+            <Link to={user.role === 'admin' ? '/admin/support' : '/support'} className="hover:text-blue-400 transition">
+              Поддержка
+            </Link>
+          )}
           {user ? (
             <div className="flex items-center gap-3">
               <span className="text-blue-400">{user.username}</span>

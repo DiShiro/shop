@@ -7,6 +7,7 @@ import dotenv from 'dotenv';
 import authRouter from './api/auth';
 import productsRouter from './api/products';
 import ordersRouter from './api/orders';
+import supportRouter from './api/support';          
 import { registerChatHandlers } from './chat/chatSocket';
 
 dotenv.config();
@@ -19,6 +20,7 @@ app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
 app.use('/api/auth', authRouter);
 app.use('/api/products', productsRouter);
 app.use('/api/orders', ordersRouter);
+app.use('/api/support', supportRouter);             
 
 app.get('/', (req, res) => {
   res.status(200).json({ status: 'ok' });
