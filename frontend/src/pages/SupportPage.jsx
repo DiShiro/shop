@@ -12,20 +12,21 @@ const SupportPage = () => {
   const intervalRef = useRef(null);
 
   const fetchMessages = async () => {
+    if (!token) return;
     try {
       const res = await axios.get('http://localhost:3000/api/support/messages', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setMessages(res.data);
     } catch (err) {
-      console.error('Ошибка загрузки сообщений', err);
+      console.error(err);
     }
   };
 
   useEffect(() => {
     if (user && token) {
       fetchMessages();
-      intervalRef.current = setInterval(fetchMessages, 3000);
+      intervalRef.current = setInterval(fetchMessages, 4000);
       return () => clearInterval(intervalRef.current);
     }
   }, [user, token]);
@@ -36,7 +37,7 @@ const SupportPage = () => {
 
   const sendMessage = async (e) => {
     e.preventDefault();
-    if (!input.trim()) return;
+    if (!input.trim() || !token) return;
     setLoading(true);
     try {
       await axios.post('http://localhost:3000/api/support/messages',
@@ -44,7 +45,7 @@ const SupportPage = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setInput('');
-      await fetchMessages(); // сразу обновить
+      await fetchMessages();
     } catch (err) {
       setError('Ошибка отправки');
     } finally {
@@ -52,7 +53,7 @@ const SupportPage = () => {
     }
   };
 
-  if (!user) return <div className="container mx-auto px-4 py-8">Пожалуйста, войдите в аккаунт.</div>;
+  if (!user) return <div className="container mx-auto px-4 py-8">Войдите в аккаунт</div>;
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -60,14 +61,20 @@ const SupportPage = () => {
         <h1 className="text-2xl font-bold mb-4">Техподдержка</h1>
         <div className="border rounded-lg h-96 overflow-y-auto p-4 bg-gray-50 mb-4">
           {messages.length === 0 && (
-            <div className="text-gray-400 text-center mt-32">Нет сообщений. Напишите нам.</div>
+            <div className="text-gray-400 text-center mt-32">Нет сообщений</div>
           )}
           {messages.map(msg => (
             <div key={msg.id} className={`mb-3 ${msg.isAdmin ? 'text-left' : 'text-right'}`}>
-              <div className={`inline-block max-w-[70%] px-3 py-2 rounded-lg ${msg.isAdmin ? 'bg-gray-200 text-gray-800' : 'bg-blue-600 text-white'}`}>
+              <div
+                className={`inline-block max-w-[85%] px-3 py-2 rounded-lg text-sm break-words whitespace-normal ${
+                  msg.isAdmin ? 'bg-gray-200 text-gray-800' : 'bg-blue-600 text-white'
+                }`}
+              >
                 {msg.content}
+                <div className="text-xs opacity-70 mt-1">
+                  {new Date(msg.createdAt).toLocaleTimeString()}
+                </div>
               </div>
-              <div className="text-xs text-gray-400 mt-1">{new Date(msg.createdAt).toLocaleString()}</div>
             </div>
           ))}
           <div ref={messagesEndRef} />
@@ -77,7 +84,7 @@ const SupportPage = () => {
             type="text"
             value={input}
             onChange={e => setInput(e.target.value)}
-            placeholder="Напишите ваш вопрос..."
+            placeholder="Ваш вопрос..."
             className="flex-1 border border-gray-300 rounded-lg px-3 py-2"
             disabled={loading}
           />

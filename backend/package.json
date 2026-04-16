@@ -23,7 +23,7 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
-    "@prisma/client": "^6.19.2",
+    "@prisma/client": "^6.19.3",
     "axios": "^1.13.6",
     "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
