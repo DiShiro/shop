@@ -13,6 +13,12 @@ enum UserRole {
   admin
 }
 
+enum TicketStatus {
+  open
+  in_progress
+  closed
+}
+
 model User {
   id        Int      @id @default(autoincrement())
   username  String   @unique
@@ -22,15 +28,15 @@ model User {
   createdAt DateTime @default(now())
   posts     Post[]
   orders    Order[]
-  supportMessages SupportMessage[]
+  tickets   Ticket[]
 }
 
 model Post {
-  id      Int     @id @default(autoincrement())
-  title   String
-  content String?
+  id       Int     @id @default(autoincrement())
+  title    String
+  content  String?
   authorId Int
-  author   User @relation(fields: [authorId], references: [id])
+  author   User    @relation(fields: [authorId], references: [id])
 }
 
 model Product {
@@ -45,13 +51,13 @@ model Product {
 }
 
 model Order {
-  id           Int         @id @default(autoincrement())
-  userId       Int
-  user         User        @relation(fields: [userId], references: [id])
-  totalAmount  Float?
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
-  orderItems   OrderItem[]
+  id          Int        @id @default(autoincrement())
+  userId      Int
+  user        User       @relation(fields: [userId], references: [id])
+  totalAmount Float?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  orderItems  OrderItem[]
 }
 
 model OrderItem {
@@ -65,11 +71,22 @@ model OrderItem {
   @@unique([orderId, productId])
 }
 
+model Ticket {
+  id        Int          @id @default(autoincrement())
+  userId    Int
+  user      User         @relation(fields: [userId], references: [id])
+  status    TicketStatus @default(open)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  messages  SupportMessage[]
+}
+
 model SupportMessage {
   id        Int      @id @default(autoincrement())
   content   String
-  userId    Int
-  user      User     @relation(fields: [userId], references: [id])
+  ticketId  Int
+  ticket    Ticket   @relation(fields: [ticketId], references: [id])
+  userId    Int      // ID пользователя, отправившего сообщение (без внешнего ключа)
   isAdmin   Boolean  @default(false)
   createdAt DateTime @default(now())
 }
